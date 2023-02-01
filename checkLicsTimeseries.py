@@ -4,6 +4,8 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 
+# Finds all the dates available from the lics ifg directory. Gaps of 12 days are highlighted in blue while gaps greater than 12 are highlighted in red.
+
 url = input("Paste url to index on lics portal: ")
 
 os.system(f"wget {url}")
@@ -35,14 +37,14 @@ for line in lines:
 
 dates_between = [(dates[i] - dates[i + 1]).days for i in np.arange(len(dates) - 1)]
 
-ix_12 = np.where(abs(np.array(dates_between)) > 12)[0]
-ix_06 = np.where(abs(np.array(dates_between)) > 6)[0]
+ix_grt12 = np.where(abs(np.array(dates_between)) > 12)[0]
+ix_12 = np.where(abs(np.array(dates_between)) == 12)[0]
 
 fig, ax = plt.subplots()
 
 ax.scatter(dates, np.ones(len(dates)), color="green", s=1)
 
-for i in ix_06:
+for i in ix_grt12:
     ax.axvspan(dates[i], dates[i + 1], color="red", alpha=0.3)
 for i in ix_12:
     ax.axvspan(dates[i], dates[i + 1], color="blue", alpha=0.3)
